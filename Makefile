@@ -8,8 +8,8 @@ all: out out/bundle.js
 out:
 	-@mkdir out
 
-out/bundle.js:
-	$(browserify) glossa.js -o out/bundle.js
+out/bundle.js: glossa.js
+	$(browserify) glossa.js -o out/bundle.js -r ./glossa.js
 
 install:
 	npm install
