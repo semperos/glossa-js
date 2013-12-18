@@ -1,0 +1,23 @@
+{
+  "name": "glossa",
+  "version": "0.0.1",
+  "description": "Glossa Programming Language: Clojure-like language designed to target multiple backends",
+  "keywords": [
+    "language",
+    "plt",
+    "lisp",
+    "clojure"
+  ],
+  "license": "EPL-1.0",
+  "author": {
+    "name": "Daniel Gregoire",
+    "url": "https://github.com/semperos"
+  },
+  "dependencies": {
+    "mori": "0.2.4"
+  },
+  "devDependencies": {
+    "browserify": "3.4.1",
+    "node-static": "0.7.2"
+  }
+}
