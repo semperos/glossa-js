@@ -12,12 +12,35 @@
       body { background-color: #ECE3D4; }
     </style>
     <script type="text/javascript">
-     function initializeDev() {
-       if(!!window.CodeMirror && !!window.Glossa) Glossa.initializeDev();
+     var Glossa = require('./glossa.js');
+     Glossa.initializeDev = function() {
+       console.log("[x] Initializing dev environment");
+       var sharedConfig = {
+         mode: "clojure",
+         theme: "blackboard",
+         tabSize: 2
+       };
+       Glossa.devEditor = CodeMirror.fromTextArea(document.getElementById('input'), sharedConfig);
+       Glossa.devOutput = CodeMirror.fromTextArea(document.getElementById('output'), sharedConfig);
+     }
+
+     Glossa.readInputField = function() {
+       return Glossa.devEditor.getValue();
+     }
+
+     Glossa.writeOutputField = function(s) {
+       // setValue requires a string
+       Glossa.devOutput.setValue('' + s);
+     }
+
+     Glossa.mainUi = function() {
+       var output = Glossa.objformat(Glossa.compile(Glossa.readInputField()));
+       console.log("FINAL OUTPUT:", output);
+       Glossa.writeOutputField(output);
      }
     </script>
   </head>
-  <body onload="initializeDev()">
+  <body onload="Glossa.initializeDev()">
     <div class="container">
       <h1>Glossa</h1>
       <div class="row">

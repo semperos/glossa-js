@@ -2,37 +2,6 @@ var mori = require('mori');
 
 var Glossa = {};
 
-/**
- * Dev-time HTML interface to compiler
- */
-if(!!this.CodeMirror) {
-  Glossa.initializeDev = function() {
-    console.log("[x] Initializing dev environment");
-    var sharedConfig = {
-      mode: "clojure",
-      theme: "blackboard",
-      tabSize: 2
-    };
-    Glossa.devEditor = CodeMirror.fromTextArea(document.getElementById('input'), sharedConfig);
-    Glossa.devOutput = CodeMirror.fromTextArea(document.getElementById('output'), sharedConfig);
-  }
-
-  Glossa.readInputField = function() {
-    return Glossa.devEditor.getValue();
-  }
-
-  Glossa.writeOutputField = function(s) {
-    // setValue requires a string
-    Glossa.devOutput.setValue('' + s);
-  }
-
-  Glossa.mainUi = function() {
-    var output = objformat(Glossa.compile(Glossa.readInputField()));
-    console.log("FINAL OUTPUT:", output);
-    Glossa.writeOutputField(output);
-  }
-}
-
 /***
  * Pretty-printers
  ***/
@@ -41,7 +10,7 @@ function arrayformat(o) {
   var s = '#[';
   var j = o.length - 1;
   for(var i = 0; i<o.length; i++) {
-    s += objformat(o[i]);
+    s += Glossa.objformat(o[i]);
     if(i !== j) s += ',';
   }
   s += ']';
@@ -54,7 +23,7 @@ function listformat(o) {
   var j = mori.count(o) - 1;
   mori.each(o, function(x) {
     console.log("X??:", x, typeof(x));
-    s += objformat(x);
+    s += Glossa.objformat(x);
     if(i !== j) s += ' ';
     i++
   });
@@ -67,7 +36,7 @@ function vectorformat(o) {
   var i = 0;
   var j = mori.count(o) - 1;
   mori.each(o, function(x) {
-    s += objformat(x);
+    s += Glossa.objformat(x);
     if(i !== j) s += ' ';
     i++;
   });
@@ -80,7 +49,7 @@ function mapformat(o) {
   var i = 0;
   var j = mori.count(mori.keys(o)) - 1;
   mori.each(o, function(entry) {
-    s += objformat(mori.first(entry)) + ' ' + objformat(mori.first(mori.rest(entry)));
+    s += Glossa.objformat(mori.first(entry)) + ' ' + Glossa.objformat(mori.first(mori.rest(entry)));
     if(i !== j) s += ', ';
     i++;
   });
@@ -93,7 +62,7 @@ function setformat(o) {
   var i = 0;
   var j = mori.count(o) - 1;
   mori.each(o, function(x) {
-    s += objformat(x);
+    s += Glossa.objformat(x);
     if(i !== j) s += ' ';
     i++;
   });
@@ -104,7 +73,7 @@ function setformat(o) {
 /**
  * Entry-point pretty-printer
  */
-function objformat(o) {
+Glossa.objformat = function(o) {
   // null
   if(o == null) {
     return 'null';
@@ -143,7 +112,7 @@ function objformat(o) {
     var i = 0;
     for(var k in o) {
       var v = o[k];
-      s += '"' + k + '"' + ' : ' + objformat(v);
+      s += '"' + k + '"' + ' : ' + Glossa.objformat(v);
       if(i !== j) s += ', ';
       i++;
     }
@@ -927,6 +896,4 @@ Glossa.compile = function(s) {
   return ast;
 }
 
-module.exports = {
-  Glossa: Glossa
-};
+module.exports = Glossa;
